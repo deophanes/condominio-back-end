@@ -9,13 +9,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Data
+@Entity
 public class Contato {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Getter @Setter private Long id;
 
 	@Getter @Setter private String name;
 	@Getter @Setter private String email;
