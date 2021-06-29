@@ -13,17 +13,17 @@ import com.condominio.web.Service.ContatoService;
 import com.condominio.web.model.Contato;
 
 @RestController
-@RequestMapping({"/contatos"})
+@RequestMapping({ "/contatos" })
 public class ContatoController {
 
 	@Autowired
 	private ContatoService service;
-	
+
 	@GetMapping
 	public List<Contato> findAll() {
 		return service.findAll();
 	}
-	
+
 	@PostMapping
 	public Contato save(@RequestBody Contato contato) {
 		return service.save(contato);

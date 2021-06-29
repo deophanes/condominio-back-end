@@ -17,7 +17,7 @@ public class ContatoService {
 	public List<Contato> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public Contato save(Contato contato) {
 		return repository.save(contato);
 	}
