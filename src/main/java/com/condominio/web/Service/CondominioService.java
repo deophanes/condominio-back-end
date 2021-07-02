@@ -26,6 +26,10 @@ public class CondominioService {
 	   return repository.findById(id);
 	}
 	
+	public boolean existsById(long id) {
+		return repository.existsById(id);
+	}
+	
 	@Transactional
 	public Condominio insert(@RequestBody Condominio condominio) {
 		return repository.save(condominio);

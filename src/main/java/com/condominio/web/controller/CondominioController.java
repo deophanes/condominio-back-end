@@ -1,9 +1,12 @@
 package com.condominio.web.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,30 +46,23 @@ public class CondominioController {
 	}
 	
 	@PutMapping(value="/{codCon}")
-	public ResponseEntity<Condominio> update(@PathVariable("codCon") long codCon,
+	public ResponseEntity<Condominio> update( @Validated @PathVariable long codCon,
 	                                      	 @RequestBody Condominio condominio) {
-	   return service.findById(codCon)
-	           .map(record -> {
-	        	   record.setDesCon(condominio.getDesCon());
-	        	   record.setEndCon(condominio.getEndCon());
-	        	   record.setComEnd(condominio.getComEnd());
-	        	   record.setBaiCon(condominio.getBaiCon());	        	   
-	        	   record.setCidCon(condominio.getCidCon());
-	        	   record.setEstCon(condominio.getEstCon());
-	        	   record.setCepCon(condominio.getCepCon());
-	        	   record.setFlgVoz(condominio.getFlgVoz());
-	        	   record.setCoCnpj(condominio.getCoCnpj());
-	               Condominio updated = service.update(record);
-	               return ResponseEntity.ok().body(updated);
-	           }).orElse(ResponseEntity.notFound().build());
+		Optional<Condominio> conAtual = service.findById(codCon);
+		if (conAtual.isPresent()) {
+			BeanUtils.copyProperties(condominio, conAtual.get() , "codCon");	
+			var updated = service.insert(conAtual.get());
+			return ResponseEntity.ok().body(updated);
+		}
+		return ResponseEntity.notFound().build();
 	}	
 	
 	@DeleteMapping(path ={"/{codCon}"})
-	public ResponseEntity <?> delete(@PathVariable long codCon) {
-	   return service.findById(codCon)
-	           .map(record -> {
-	               service.deleteById(codCon);
-	               return ResponseEntity.ok().build();
-	           }).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity <Void> delete(@PathVariable long codCon) {
+		if (service.existsById(codCon)) {
+			service.deleteById(codCon);
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.notFound().build();
 	}
 }
