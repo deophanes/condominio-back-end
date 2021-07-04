@@ -6,8 +6,11 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.condominio.web.model.Condominio;
 import com.condominio.web.repository.CondominioRepository;
@@ -18,8 +21,10 @@ public class CondominioService {
 	@Autowired
 	CondominioRepository repository;
 
-	public List<Condominio> findAll() {
-		return (List<Condominio>) repository.findAll();
+	public Page<Condominio> findAll(@RequestParam(value = "page", defaultValue = "0") Integer pagina, 
+									@RequestParam(value = "size", defaultValue = "5") Integer tamanho	) {
+		PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+		return repository.findAll(pageRequest);
 	}
 
 	public Optional<Condominio> findById(long id){
